@@ -33,6 +33,15 @@ public class Wallet {
 		this.sharesQuantities = sharesQuantities;
 	}
 	
+	public void addMoney(BigDecimal money) {
+		this.money = this.money.add(money);
+	}
+	
+	public BigDecimal takeMoney(BigDecimal money) {
+		this.money = this.money.subtract(money);
+		return money;
+	}
+	
 	public void addShares(Map<SharePrice, Integer> shares) {
 			for(SharePrice sp : shares.keySet()) {
 			

@@ -7,6 +7,7 @@ import com.capgemini.model.SharePrice;
 import com.capgemini.model.Wallet;
 
 public interface PlayingStocksStrategy {
+	
 	Map<String, Integer> chooseSharesToBuy(Wallet wallet, BrokersOffice brokersOffice);
 	Map<SharePrice, Integer> chooseSharesToSell(Wallet wallet, BrokersOffice brokersOffice);
 }

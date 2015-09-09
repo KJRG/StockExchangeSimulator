@@ -35,8 +35,10 @@ public class Player {
 	}
 
 	private void buyShares() {
+		Map<String, Integer> sharesToBuy = playingStrategy
+				.chooseSharesToBuy(wallet, brokersOffice);
 		Map<SharePrice, Integer> boughtShares = brokersOffice.buy(
-				playingStrategy.chooseSharesToBuy(wallet, brokersOffice),
+				sharesToBuy,
 				wallet);
 		wallet.addShares(boughtShares);
 	}
@@ -46,7 +48,7 @@ public class Player {
 				.chooseSharesToSell(wallet, brokersOffice);
 		wallet.removeShares(sharesToSell);
 		BigDecimal profit = brokersOffice.sell(sharesToSell);
-		wallet.setMoney(wallet.getMoney().add(profit));
+		wallet.addMoney(profit);
 	}
 
 	public void play() {

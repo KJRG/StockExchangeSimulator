@@ -20,6 +20,7 @@ public class RandomPlayingStrategy implements PlayingStocksStrategy {
 	@Override
 	public Map<String, Integer> chooseSharesToBuy(Wallet wallet,
 			BrokersOffice brokersOffice) {
+		
 		Map<String, Integer> sharesToBuy = new HashMap<>();
 
 		for (String companyName : brokersOffice.getCompaniesNames()) {
@@ -78,9 +79,5 @@ public class RandomPlayingStrategy implements PlayingStocksStrategy {
 		}
 
 		return sharesToSell;
-		
-//		wallet.removeShares(sharesToSell);
-//		return brokersOffice.sell(sharesToSell);
 	}
-
 }

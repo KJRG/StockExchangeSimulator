@@ -43,7 +43,7 @@ public class BrokersOfficeTest {
 		// 1 * 99.5% = 0.995
 		BigDecimal expectedResult = new BigDecimal("0.995");
 		// then
-		assertEquals(expectedResult, brokersOffice.getFee());
+		assertEquals(expectedResult, brokersOffice.getBrokerage());
 	}
 
 	@Test
@@ -239,7 +239,7 @@ public class BrokersOfficeTest {
 		result = brokersOffice.sell(sharesToSell);
 		// then
 		BigDecimal expectedResult = new BigDecimal("253.0")
-				.multiply(brokersOffice.getFee());
+				.multiply(brokersOffice.getBrokerage());
 		assertEquals(expectedResult.compareTo(result), 0);
 	}
 }

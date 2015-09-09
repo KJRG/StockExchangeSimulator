@@ -9,12 +9,12 @@ import java.util.Set;
 
 public class BrokersOffice {
 
-	private static final BigDecimal SUM_AFTER_CHARGING_COMMISION_RATIO = new BigDecimal(
+	private static final BigDecimal SUM_AFTER_CHARGING_BROKERAGE = new BigDecimal(
 			"0.995");
 	private StockExchange stockExchange;
 	
-	public BigDecimal getFee() {
-		return SUM_AFTER_CHARGING_COMMISION_RATIO;
+	public BigDecimal getBrokerage() {
+		return SUM_AFTER_CHARGING_BROKERAGE;
 	}
 
 	public BrokersOffice(StockExchange stockExchange) {
@@ -57,12 +57,13 @@ public class BrokersOffice {
 		if (totalPrice.compareTo(wallet.getMoney()) > 0) {
 			return Collections.emptyMap();
 		}
-		wallet.setMoney(wallet.getMoney().subtract(totalPrice));
+		wallet.takeMoney(totalPrice);
 
 		return boughtShares;
 	}
 
 	public BigDecimal sell(Map<SharePrice, Integer> sharesQuantities) {
+		
 		BigDecimal sum = BigDecimal.ZERO;
 
 		if (sharesQuantities == null) {
@@ -74,8 +75,8 @@ public class BrokersOffice {
 		}
 
 		/*
-		 * The broker's office charges commission.
+		 * The broker's office charges brokerage.
 		 */
-		return sum.multiply(SUM_AFTER_CHARGING_COMMISION_RATIO);
+		return sum.multiply(SUM_AFTER_CHARGING_BROKERAGE);
 	}
 }
