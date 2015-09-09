@@ -11,7 +11,6 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -26,19 +25,20 @@ public class DataProviderImpl implements DataProvider {
 
 	public DataProviderImpl() {
 		sharePrices = new ArrayList<>();
-		
+
 		sharePriceDateComparator = new Comparator<SharePrice>() {
-			
+
 			@Override
 			public int compare(SharePrice o1, SharePrice o2) {
 				return o1.getDate().compareTo(o2.getDate());
 			}
 		};
 	}
-	
+
 	@Override
 	public void readDataFromFile(String filepath)
 			throws FileNotFoundException, IOException, DateTimeParseException {
+
 		BufferedReader reader = null;
 		String separator = ",";
 		String line = "";
@@ -46,24 +46,23 @@ public class DataProviderImpl implements DataProvider {
 		BigDecimal price = null;
 		LocalDate date = null;
 		DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyyMMdd");
-		
+
 		try {
 			reader = new BufferedReader(new FileReader(filepath));
-			
+
 			while ((line = reader.readLine()) != null) {
 				String[] shareData = line.split(separator);
-				
+
 				companyName = shareData[0];
-				
+
 				try {
 					date = LocalDate.parse(shareData[1], dateFormat);
-				}
-				catch(DateTimeParseException e) {
+				} catch (DateTimeParseException e) {
 					throw e;
 				}
-				
+
 				price = new BigDecimal(shareData[2]);
-				
+
 				sharePrices.add(new SharePrice(companyName, date, price));
 			}
 		} catch (FileNotFoundException e) {
@@ -78,16 +77,11 @@ public class DataProviderImpl implements DataProvider {
 			}
 		}
 	}
-	
+
 	@Override
 	public Set<String> getCompaniesNames() {
-		Set<String> companiesNames = new HashSet<>();
-		
-		for(SharePrice sp : sharePrices) {
-			companiesNames.add(sp.getCompanyName());
-		}
-		
-		return companiesNames;
+		return sharePrices.stream().map(SharePrice::getCompanyName)
+				.collect(Collectors.toSet());
 	}
 
 	@Override
@@ -106,7 +100,7 @@ public class DataProviderImpl implements DataProvider {
 
 	@Override
 	public List<SharePrice> getSharePricesByDate(LocalDate date) {
-		return sharePrices.stream().filter(p -> p.getDate().equals(date)).collect(Collectors.toList());
+		return sharePrices.stream().filter(p -> p.getDate().equals(date))
+				.collect(Collectors.toList());
 	}
-
 }
