@@ -5,9 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -38,7 +38,7 @@ public class DataProviderImpl implements DataProvider {
 	
 	@Override
 	public void readDataFromFile(String filepath)
-			throws FileNotFoundException, ParseException, IOException {
+			throws FileNotFoundException, IOException, DateTimeParseException {
 		BufferedReader reader = null;
 		String separator = ",";
 		String line = "";
@@ -54,7 +54,14 @@ public class DataProviderImpl implements DataProvider {
 				String[] shareData = line.split(separator);
 				
 				companyName = shareData[0];
-				date = LocalDate.parse(shareData[1], dateFormat);
+				
+				try {
+					date = LocalDate.parse(shareData[1], dateFormat);
+				}
+				catch(DateTimeParseException e) {
+					throw e;
+				}
+				
 				price = new BigDecimal(shareData[2]);
 				
 				sharePrices.add(new SharePrice(companyName, date, price));

@@ -2,8 +2,8 @@ package com.capgemini.model;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Set;
 
@@ -27,7 +27,7 @@ public class StockExchange {
 	}
 
 	public void initialise(String filepath)
-			throws FileNotFoundException, IOException, ParseException {
+			throws FileNotFoundException, IOException, DateTimeParseException {
 		dataProvider.readDataFromFile(filepath);
 		companiesNames = dataProvider.getCompaniesNames();
 		currentDate = dataProvider.getEarliestDate();
