@@ -1,6 +1,7 @@
 package com.capgemini.model.strategy.impl;
 
 import java.math.BigDecimal;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -17,7 +18,7 @@ public class RandomPlayingStrategy implements PlayingStocksStrategy {
 	private Random randomGenerator = new Random();
 
 	@Override
-	public Map<SharePrice, Integer> buyShares(Wallet wallet,
+	public Map<String, Integer> chooseSharesToBuy(Wallet wallet,
 			BrokersOffice brokersOffice) {
 		Map<String, Integer> sharesToBuy = new HashMap<>();
 
@@ -44,11 +45,11 @@ public class RandomPlayingStrategy implements PlayingStocksStrategy {
 			}
 		}
 
-		return brokersOffice.buy(sharesToBuy, wallet);
+		return sharesToBuy;
 	}
 
 	@Override
-	public BigDecimal sellShares(Wallet wallet,
+	public Map<SharePrice, Integer> chooseSharesToSell(Wallet wallet,
 			BrokersOffice brokersOffice) {
 
 		Map<SharePrice, Integer> playersSharesQuantities = wallet
@@ -56,7 +57,7 @@ public class RandomPlayingStrategy implements PlayingStocksStrategy {
 
 		if (playersSharesQuantities == null
 				|| playersSharesQuantities.isEmpty()) {
-			return BigDecimal.ZERO;
+			return Collections.emptyMap();
 		}
 
 		Map<SharePrice, Integer> sharesToSell = new HashMap<>();
@@ -76,9 +77,10 @@ public class RandomPlayingStrategy implements PlayingStocksStrategy {
 			}
 		}
 
-		wallet.removeShares(sharesToSell);
-
-		return brokersOffice.sell(sharesToSell);
+		return sharesToSell;
+		
+//		wallet.removeShares(sharesToSell);
+//		return brokersOffice.sell(sharesToSell);
 	}
 
 }
