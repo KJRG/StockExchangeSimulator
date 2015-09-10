@@ -34,11 +34,15 @@ public class Wallet {
 	}
 	
 	public void addMoney(BigDecimal money) {
+		if(money == null) {
+			return;
+		}
+		
 		this.money = this.money.add(money);
 	}
 	
 	public BigDecimal takeMoney(BigDecimal money) {
-		if(this.money.compareTo(money) < 0) {
+		if(money == null || this.money.compareTo(money) < 0) {
 			return BigDecimal.ZERO;
 		}
 		
@@ -47,7 +51,12 @@ public class Wallet {
 	}
 	
 	public void addStocks(Map<Stock, Integer> stocks) {
-			for(Stock stock : stocks.keySet()) {
+		
+		if(stocks == null || stocks.isEmpty()) {
+			return;
+		}
+		
+		for(Stock stock : stocks.keySet()) {
 			
 			Integer quantityBeforeAdding = stocksQuantities.get(stock);
 			if(quantityBeforeAdding == null) {
@@ -60,6 +69,11 @@ public class Wallet {
 	}
 	
 	public void removeStocks(Map<Stock, Integer> stocks) {
+
+		if(stocks == null || stocks.isEmpty()) {
+			return;
+		}
+		
 		for(Stock stock : stocks.keySet()) {
 			
 			Integer quantityBeforeRemoving = stocksQuantities.get(stock);

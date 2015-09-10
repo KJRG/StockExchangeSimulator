@@ -134,7 +134,7 @@ public class BrokerageFirmTest {
 	}
 
 	@Test
-	public void buyShouldReturnEmptyMapForNullStockQuantities() {
+	public void buyShouldReturnEmptyMapForNullStockQuantitiesArgument() {
 		// given
 		Wallet wallet = new Wallet();
 		// when
@@ -145,7 +145,7 @@ public class BrokerageFirmTest {
 	}
 
 	@Test
-	public void buyShouldReturnEmptyMapForNullWallet() {
+	public void buyShouldReturnEmptyMapForNullWalletArgument() {
 		// given
 		Map<String, Integer> stocksToBuy = new HashMap<>();
 		stocksToBuy.put("KGHM", 17);
@@ -157,7 +157,7 @@ public class BrokerageFirmTest {
 	}
 
 	@Test
-	public void buyShouldReturnEmptyMapForEmptyStockQuantities() {
+	public void buyShouldReturnEmptyMapForEmptyStockQuantitiesArgument() {
 		// given
 		Map<String, Integer> stocksToBuy = Collections.emptyMap();
 		Wallet wallet = new Wallet();
@@ -218,7 +218,7 @@ public class BrokerageFirmTest {
 	}
 
 	@Test
-	public void sellShouldReturn0ForEmptyMap() {
+	public void sellShouldReturn0ForEmptyStocksArgument() {
 		// given
 		BigDecimal result = null;
 		Map<Stock, Integer> stocksToSell = Collections.emptyMap();
