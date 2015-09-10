@@ -208,14 +208,14 @@ public class WalletTest {
 		stocks.put(new Stock("KGHM", LocalDate.parse("2013-01-07"),
 				new BigDecimal("193.0")), 5);
 		wallet.setStocksQuantities(stocks);
-		
+
 		Map<Stock, Integer> stocksToRemove = new HashMap<>();
 		stocksToRemove.put(new Stock("KGHM", LocalDate.parse("2013-01-07"),
 				new BigDecimal("193.0")), 5);
-		
+
 		// when
 		wallet.removeStocks(stocksToRemove);
-		
+
 		// then
 		Integer numberOfStocksInWallet = wallet.getStocksQuantities().values()
 				.stream().reduce(0, (a, b) -> a + b);
@@ -225,6 +225,52 @@ public class WalletTest {
 						new BigDecimal("12.87")));
 		assertEquals(0, (int) numberOfStocksInWallet);
 		assertNull(numberOfStocksOfTheSameCompanyAsRemovedStocks);
+	}
+
+	@Test
+	public void walletShouldNotUpdateStocksForNullCurrentStocksArgument() {
+		// given
+		Wallet wallet = new Wallet();
+		Map<Stock, Integer> stocksQuantities = new HashMap<>();
+		stocksQuantities.put(
+				new Stock("TPSA", LocalDate.parse("2013-01-02"),
+						new BigDecimal("12.16")),
+				5);
+		wallet.setStocksQuantities(stocksQuantities);
+		
+		// when
+		wallet.updateStocks(null);
+		
+		// then
+		Stock stock = wallet.getStocksQuantities().keySet().stream()
+				.filter(s -> s.getCompanyName().equals("TPSA")).findFirst()
+				.get();
+		assertNotNull(stock);
+		assertEquals(0, stock.getPrice().compareTo(new BigDecimal("12.16")));
+	}
+
+	@Test
+	public void walletShouldNotUpdateStocksForEmptyCurrentStocksArgument() {
+		// given
+		Wallet wallet = new Wallet();
+		Map<Stock, Integer> stocksQuantities = new HashMap<>();
+		stocksQuantities.put(
+				new Stock("TPSA", LocalDate.parse("2013-01-02"),
+						new BigDecimal("12.16")),
+				5);
+		wallet.setStocksQuantities(stocksQuantities);
+		
+		List<Stock> currentStocks = Collections.emptyList();
+		
+		// when
+		wallet.updateStocks(currentStocks);
+		
+		// then
+		Stock stock = wallet.getStocksQuantities().keySet().stream()
+				.filter(s -> s.getCompanyName().equals("TPSA")).findFirst()
+				.get();
+		assertNotNull(stock);
+		assertEquals(0, stock.getPrice().compareTo(new BigDecimal("12.16")));
 	}
 
 	@Test
@@ -254,9 +300,10 @@ public class WalletTest {
 				new Stock("JSW", LocalDate.parse("2013-07-04"),
 						new BigDecimal("66.3")));
 
-		// when
 		wallet.setMoney(BigDecimal.ZERO);
 		wallet.setStocksQuantities(stocksQuantities);
+
+		// when
 		wallet.updateStocks(stocksForCurrentDate);
 
 		// then

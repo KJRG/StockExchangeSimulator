@@ -68,7 +68,9 @@ public class Stock {
 			if (other.companyName != null) {
 				return false;
 			}
-		} else if (!companyName.equals(other.companyName)) {
+			return true;
+		}
+		if (!companyName.equals(other.companyName)) {
 			return false;
 		}
 		

@@ -34,6 +34,7 @@ public class Wallet {
 	}
 	
 	public void addMoney(BigDecimal money) {
+		
 		if(money == null) {
 			return;
 		}
@@ -42,6 +43,7 @@ public class Wallet {
 	}
 	
 	public BigDecimal takeMoney(BigDecimal money) {
+		
 		if(money == null || this.money.compareTo(money) < 0) {
 			return BigDecimal.ZERO;
 		}
@@ -87,6 +89,10 @@ public class Wallet {
 	}
 	
 	public void updateStocks(List<Stock> currentStocks) {
+		
+		if(currentStocks == null || currentStocks.isEmpty()) {
+			return;
+		}
 		
 		for (Stock stock : stocksQuantities.keySet()) {
 			
