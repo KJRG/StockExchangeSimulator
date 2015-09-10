@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.format.DateTimeParseException;
 
-import com.capgemini.model.BrokersOffice;
+import com.capgemini.model.BrokerageFirm;
 import com.capgemini.model.Player;
 import com.capgemini.model.SimulationStatus;
 import com.capgemini.model.StockExchange;
@@ -15,8 +15,8 @@ public class Simulator {
 		
 		String filepath = "C:\\Users\\kgalka\\Desktop\\ZadanieGielda\\ZadanieGielda\\dane.csv";
 		StockExchange stockExchange = new StockExchange();
-		BrokersOffice brokersOffice = new BrokersOffice(stockExchange);
-		Player player = new Player(new RandomInvestingStrategy(), brokersOffice);
+		BrokerageFirm brokerageFirm = new BrokerageFirm(stockExchange);
+		Player player = new Player(new RandomInvestingStrategy(), brokerageFirm);
 		
 		try {
 			stockExchange.initialise(filepath);

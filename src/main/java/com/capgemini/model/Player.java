@@ -9,13 +9,13 @@ public class Player {
 
 	private Wallet wallet;
 	private InvestingStrategy investingStrategy;
-	private BrokersOffice brokersOffice;
+	private BrokerageFirm brokerageFirm;
 
 	public Player(InvestingStrategy investingStrategy,
-			BrokersOffice brokersOffice) {
+			BrokerageFirm brokerageFirm) {
 		this.wallet = new Wallet();
 		this.investingStrategy = investingStrategy;
-		this.brokersOffice = brokersOffice;
+		this.brokerageFirm = brokerageFirm;
 	}
 
 	public Wallet getWallet() {
@@ -36,8 +36,8 @@ public class Player {
 
 	private void buyStocks() {
 		Map<String, Integer> stocksToBuy = investingStrategy
-				.chooseStocksToBuy(wallet, brokersOffice);
-		Map<Stock, Integer> boughtStocks = brokersOffice.buy(
+				.chooseStocksToBuy(wallet, brokerageFirm);
+		Map<Stock, Integer> boughtStocks = brokerageFirm.buy(
 				stocksToBuy,
 				wallet);
 		wallet.addStocks(boughtStocks);
@@ -45,15 +45,15 @@ public class Player {
 
 	private void sellStocks() {
 		Map<Stock, Integer> stocksToSell = investingStrategy
-				.chooseStocksToSell(wallet, brokersOffice);
+				.chooseStocksToSell(wallet, brokerageFirm);
 		wallet.removeStocks(stocksToSell);
-		BigDecimal profit = brokersOffice.sell(stocksToSell);
+		BigDecimal profit = brokerageFirm.sell(stocksToSell);
 		wallet.addMoney(profit);
 	}
 
 	public void play() {
 		buyStocks();
 		sellStocks();
-		wallet.updateStocks(brokersOffice.getStocks());
+		wallet.updateStocks(brokerageFirm.getStocks());
 	}
 }

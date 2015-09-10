@@ -7,17 +7,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class BrokersOffice {
+public class BrokerageFirm {
 
-	private static final BigDecimal MONEY_AFTER_CHARGING_BROKERAGE_FEE = new BigDecimal(
+	private static final BigDecimal MONEY_AFTER_CHARGING_COMMISSION = new BigDecimal(
 			"0.995");
 	private StockExchange stockExchange;
 	
-	public BigDecimal getBrokerageFee() {
-		return MONEY_AFTER_CHARGING_BROKERAGE_FEE;
+	public BigDecimal getCommission() {
+		return MONEY_AFTER_CHARGING_COMMISSION;
 	}
 
-	public BrokersOffice(StockExchange stockExchange) {
+	public BrokerageFirm(StockExchange stockExchange) {
 		this.stockExchange = stockExchange;
 	}
 
@@ -75,8 +75,8 @@ public class BrokersOffice {
 		}
 
 		/*
-		 * The broker's office charges brokerage fee.
+		 * The brokerage firm charges commission.
 		 */
-		return totalPrice.multiply(MONEY_AFTER_CHARGING_BROKERAGE_FEE);
+		return totalPrice.multiply(MONEY_AFTER_CHARGING_COMMISSION);
 	}
 }

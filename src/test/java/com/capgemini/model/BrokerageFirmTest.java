@@ -22,10 +22,10 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-public class BrokersOfficeTest {
+public class BrokerageFirmTest {
 
 	@InjectMocks
-	private BrokersOffice brokersOffice;
+	private BrokerageFirm brokerageFirm;
 	@Mock
 	private StockExchange stockExchange;
 
@@ -33,21 +33,21 @@ public class BrokersOfficeTest {
 	public void setUp() {
 		stockExchange = new StockExchange();
 		MockitoAnnotations.initMocks(this);
-		brokersOffice = new BrokersOffice(stockExchange);
+		brokerageFirm = new BrokerageFirm(stockExchange);
 	}
 
 	@Test
-	public void brokerageFeeShouldBe0point5Percent() {
+	public void commissionShouldBe0point5Percent() {
 		// given when
 		// 100% - 0.5% = 99.5%
 		// 1 * 99.5% = 0.995
 		BigDecimal expectedResult = new BigDecimal("0.995");
 		// then
-		assertEquals(expectedResult, brokersOffice.getBrokerageFee());
+		assertEquals(expectedResult, brokerageFirm.getCommission());
 	}
 
 	@Test
-	public void brokersOfficeShouldCallGetCompaniesNamesFromClassStockExchange() {
+	public void brokerageFirmShouldCallGetCompaniesNamesFromClassStockExchange() {
 		// given
 		Mockito.when(stockExchange.getCompaniesNames())
 				.then(new Answer<Set<String>>() {
@@ -62,14 +62,14 @@ public class BrokersOfficeTest {
 				});
 
 		// when
-		brokersOffice.getCompaniesNames();
+		brokerageFirm.getCompaniesNames();
 
 		// then
 		Mockito.verify(stockExchange).getCompaniesNames();
 	}
 
 	@Test
-	public void brokersOfficeShouldCallGetStocksPricesFromClassStockExchange() {
+	public void brokerageFirmShouldCallGetStocksPricesFromClassStockExchange() {
 		// given
 		Mockito.when(stockExchange.getStocks())
 				.then(new Answer<List<Stock>>() {
@@ -98,14 +98,14 @@ public class BrokersOfficeTest {
 				});
 
 		// when
-		brokersOffice.getStocks();
+		brokerageFirm.getStocks();
 
 		// then
 		Mockito.verify(stockExchange).getStocks();
 	}
 
 	@Test
-	public void brokersOfficeShouldCallGetStockByCompanyNameFromClassStockExchange() {
+	public void brokerageFirmShouldCallGetStockByCompanyNameFromClassStockExchange() {
 		// given
 		Mockito.when(stockExchange.getStockByCompanyName(Mockito.anyString()))
 				.then(new Answer<Stock>() {
@@ -123,7 +123,7 @@ public class BrokersOfficeTest {
 		String companyName = "PKOBP";
 
 		// when
-		Stock result = brokersOffice.getStockByCompanyName(companyName);
+		Stock result = brokerageFirm.getStockByCompanyName(companyName);
 
 		// then
 		ArgumentCaptor<String> capture = ArgumentCaptor.forClass(String.class);
@@ -138,7 +138,7 @@ public class BrokersOfficeTest {
 		// given
 		Wallet wallet = new Wallet();
 		// when
-		Map<Stock, Integer> result = brokersOffice.buy(null, wallet);
+		Map<Stock, Integer> result = brokerageFirm.buy(null, wallet);
 		// then
 		assertNotNull(result);
 		assertTrue(result.isEmpty());
@@ -150,7 +150,7 @@ public class BrokersOfficeTest {
 		Map<String, Integer> stocksToBuy = new HashMap<>();
 		stocksToBuy.put("KGHM", 17);
 		// when
-		Map<Stock, Integer> result = brokersOffice.buy(stocksToBuy, null);
+		Map<Stock, Integer> result = brokerageFirm.buy(stocksToBuy, null);
 		// then
 		assertNotNull(result);
 		assertTrue(result.isEmpty());
@@ -162,7 +162,7 @@ public class BrokersOfficeTest {
 		Map<String, Integer> stocksToBuy = Collections.emptyMap();
 		Wallet wallet = new Wallet();
 		// when
-		Map<Stock, Integer> result = brokersOffice.buy(stocksToBuy,
+		Map<Stock, Integer> result = brokerageFirm.buy(stocksToBuy,
 				wallet);
 		// then
 		assertNotNull(result);
@@ -196,7 +196,7 @@ public class BrokersOfficeTest {
 		});
 		
 		// when
-		Map<Stock, Integer> result = brokersOffice.buy(stocksToBuy,
+		Map<Stock, Integer> result = brokerageFirm.buy(stocksToBuy,
 				wallet);
 		
 		// then
@@ -212,7 +212,7 @@ public class BrokersOfficeTest {
 		// given
 		BigDecimal result = null;
 		// when
-		result = brokersOffice.sell(null);
+		result = brokerageFirm.sell(null);
 		// then
 		assertEquals(BigDecimal.ZERO.compareTo(result), 0);
 	}
@@ -223,23 +223,23 @@ public class BrokersOfficeTest {
 		BigDecimal result = null;
 		Map<Stock, Integer> stocksToSell = Collections.emptyMap();
 		// when
-		result = brokersOffice.sell(stocksToSell);
+		result = brokerageFirm.sell(stocksToSell);
 		// then
 		assertEquals(BigDecimal.ZERO.compareTo(result), 0);
 	}
 
 	@Test
-	public void sellShouldReturn253MinusBrokerageFee() {
+	public void sellShouldReturn253MinusCommission() {
 		// given
 		BigDecimal result = null;
 		Map<Stock, Integer> stocksToSell = new HashMap<>();
 		stocksToSell.put(new Stock("KGHM", LocalDate.parse("2013-07-03"),
 				new BigDecimal("126.5")), 2);
 		// when
-		result = brokersOffice.sell(stocksToSell);
+		result = brokerageFirm.sell(stocksToSell);
 		// then
 		BigDecimal expectedResult = new BigDecimal("253.0")
-				.multiply(brokersOffice.getBrokerageFee());
+				.multiply(brokerageFirm.getCommission());
 		assertEquals(expectedResult.compareTo(result), 0);
 	}
 }

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import com.capgemini.model.BrokersOffice;
+import com.capgemini.model.BrokerageFirm;
 import com.capgemini.model.Stock;
 import com.capgemini.model.Wallet;
 import com.capgemini.model.strategy.InvestingStrategy;
@@ -19,16 +19,16 @@ public class RandomInvestingStrategy implements InvestingStrategy {
 
 	@Override
 	public Map<String, Integer> chooseStocksToBuy(Wallet wallet,
-			BrokersOffice brokersOffice) {
+			BrokerageFirm brokerageFirm) {
 		
 		Map<String, Integer> stocksToBuy = new HashMap<>();
 
-		for (String companyName : brokersOffice.getCompaniesNames()) {
+		for (String companyName : brokerageFirm.getCompaniesNames()) {
 			BigDecimal totalPrice = BigDecimal.ZERO;
 
 			if (randomGenerator.nextBoolean()) {
 				Integer quantity = 0;
-				BigDecimal price = brokersOffice
+				BigDecimal price = brokerageFirm
 						.getStockByCompanyName(companyName).getPrice();
 
 				for (int i = 0; i < randomGenerator
@@ -51,7 +51,7 @@ public class RandomInvestingStrategy implements InvestingStrategy {
 
 	@Override
 	public Map<Stock, Integer> chooseStocksToSell(Wallet wallet,
-			BrokersOffice brokersOffice) {
+			BrokerageFirm brokerageFirm) {
 
 		Map<Stock, Integer> playersStocksQuantities = wallet
 				.getStocksQuantities();
