@@ -5,13 +5,13 @@ import java.util.Map;
 
 import com.capgemini.model.strategy.InvestingStrategy;
 
-public class Player {
+public class Investor {
 
 	private Wallet wallet;
 	private InvestingStrategy investingStrategy;
 	private BrokerageFirm brokerageFirm;
 
-	public Player(InvestingStrategy investingStrategy,
+	public Investor(InvestingStrategy investingStrategy,
 			BrokerageFirm brokerageFirm) {
 		this.wallet = new Wallet();
 		this.investingStrategy = investingStrategy;
@@ -51,7 +51,7 @@ public class Player {
 		wallet.addMoney(profit);
 	}
 
-	public void play() {
+	public void invest() {
 		buyStocks();
 		sellStocks();
 		wallet.updateStocks(brokerageFirm.getStocks());

@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.time.format.DateTimeParseException;
 
 import com.capgemini.model.BrokerageFirm;
-import com.capgemini.model.Player;
+import com.capgemini.model.Investor;
 import com.capgemini.model.SimulationStatus;
 import com.capgemini.model.StockExchange;
 import com.capgemini.model.strategy.impl.RandomInvestingStrategy;
@@ -16,7 +16,7 @@ public class Simulator {
 		String filepath = "C:\\Users\\kgalka\\Desktop\\ZadanieGielda\\ZadanieGielda\\dane.csv";
 		StockExchange stockExchange = new StockExchange();
 		BrokerageFirm brokerageFirm = new BrokerageFirm(stockExchange);
-		Player player = new Player(new RandomInvestingStrategy(), brokerageFirm);
+		Investor investor = new Investor(new RandomInvestingStrategy(), brokerageFirm);
 		
 		try {
 			stockExchange.initialise(filepath);
@@ -29,8 +29,8 @@ public class Simulator {
 		}
 		
 		System.out.println("Simulation initialised");
-		System.out.println("Player\'s wallet value: " + player.getWallet().getTotalValue() + "PLN");
-		System.out.println("Player\'s money: " + player.getWallet().getMoney() + "PLN");
+		System.out.println("Investor\'s wallet value: " + investor.getWallet().getTotalValue() + "PLN");
+		System.out.println("Investor\'s money: " + investor.getWallet().getMoney() + "PLN");
 		System.out.println("\nStarting simulation\n");
 		
 		int i = 1;
@@ -38,19 +38,19 @@ public class Simulator {
 				.getSimulationStatus() == SimulationStatus.SIMULATION_NOT_FINISHED) {
 			
 
-			player.play();
+			investor.invest();
 			stockExchange.nextDay();
 
 			System.out.println("Iteration no. " + i);
-			System.out.println("Player\'s wallet value: " + player.getWallet().getTotalValue() + "PLN");
-			System.out.println("Player\'s money: " + player.getWallet().getMoney() + "PLN");
+			System.out.println("Investor\'s wallet value: " + investor.getWallet().getTotalValue() + "PLN");
+			System.out.println("Investor\'s money: " + investor.getWallet().getMoney() + "PLN");
 			System.out.println();
 			
 			i++;
 		}
 		
 		System.out.println("Simulation finished");
-		System.out.println("Player\'s wallet value: " + player.getWallet().getTotalValue() + "PLN");
-		System.out.println("Player\'s money: " + player.getWallet().getMoney() + "PLN");
+		System.out.println("Investor\'s wallet value: " + investor.getWallet().getTotalValue() + "PLN");
+		System.out.println("Investor\'s money: " + investor.getWallet().getMoney() + "PLN");
 	}
 }
