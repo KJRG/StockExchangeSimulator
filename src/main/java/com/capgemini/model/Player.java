@@ -3,18 +3,18 @@ package com.capgemini.model;
 import java.math.BigDecimal;
 import java.util.Map;
 
-import com.capgemini.model.strategy.PlayingStocksStrategy;
+import com.capgemini.model.strategy.InvestingStrategy;
 
 public class Player {
 
 	private Wallet wallet;
-	private PlayingStocksStrategy playingStrategy;
+	private InvestingStrategy investingStrategy;
 	private BrokersOffice brokersOffice;
 
-	public Player(PlayingStocksStrategy playingStrategy,
+	public Player(InvestingStrategy investingStrategy,
 			BrokersOffice brokersOffice) {
 		this.wallet = new Wallet();
-		this.playingStrategy = playingStrategy;
+		this.investingStrategy = investingStrategy;
 		this.brokersOffice = brokersOffice;
 	}
 
@@ -26,34 +26,34 @@ public class Player {
 		this.wallet = wallet;
 	}
 
-	public PlayingStocksStrategy getPlayingStrategy() {
-		return playingStrategy;
+	public InvestingStrategy getInvestingStrategy() {
+		return investingStrategy;
 	}
 
-	public void setPlayingStrategy(PlayingStocksStrategy playingStrategy) {
-		this.playingStrategy = playingStrategy;
+	public void setInvestingStrategy(InvestingStrategy investingStrategy) {
+		this.investingStrategy = investingStrategy;
 	}
 
-	private void buyShares() {
-		Map<String, Integer> sharesToBuy = playingStrategy
-				.chooseSharesToBuy(wallet, brokersOffice);
-		Map<SharePrice, Integer> boughtShares = brokersOffice.buy(
-				sharesToBuy,
+	private void buyStocks() {
+		Map<String, Integer> stocksToBuy = investingStrategy
+				.chooseStocksToBuy(wallet, brokersOffice);
+		Map<Stock, Integer> boughtStocks = brokersOffice.buy(
+				stocksToBuy,
 				wallet);
-		wallet.addShares(boughtShares);
+		wallet.addStocks(boughtStocks);
 	}
 
-	private void sellShares() {
-		Map<SharePrice, Integer> sharesToSell = playingStrategy
-				.chooseSharesToSell(wallet, brokersOffice);
-		wallet.removeShares(sharesToSell);
-		BigDecimal profit = brokersOffice.sell(sharesToSell);
+	private void sellStocks() {
+		Map<Stock, Integer> stocksToSell = investingStrategy
+				.chooseStocksToSell(wallet, brokersOffice);
+		wallet.removeStocks(stocksToSell);
+		BigDecimal profit = brokersOffice.sell(stocksToSell);
 		wallet.addMoney(profit);
 	}
 
 	public void play() {
-		buyShares();
-		sellShares();
-		wallet.updateSharePrices(brokersOffice.getSharesPrices());
+		buyStocks();
+		sellStocks();
+		wallet.updateStocks(brokersOffice.getStocks());
 	}
 }

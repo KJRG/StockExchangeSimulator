@@ -14,14 +14,14 @@ public class StockExchange {
 
 	private SimulationStatus simulationStatus;
 	private DataProvider dataProvider;
-	private List<SharePrice> sharePrices;
+	private List<Stock> stocks;
 	private LocalDate currentDate;
 	private Set<String> companiesNames;
 
 	public StockExchange() {
 		this.simulationStatus = SimulationStatus.SIMULATION_UNINITIALISED;
 		this.dataProvider = new DataProviderImpl();
-		sharePrices = null;
+		stocks = null;
 		currentDate = null;
 		companiesNames = null;
 	}
@@ -31,7 +31,7 @@ public class StockExchange {
 		dataProvider.readDataFromFile(filepath);
 		companiesNames = dataProvider.getCompaniesNames();
 		currentDate = dataProvider.getEarliestDate();
-		sharePrices = dataProvider.getSharePricesByDate(currentDate);
+		stocks = dataProvider.getStocksByDate(currentDate);
 
 		if(currentDate.compareTo(dataProvider.getLatestDate()) >= 0) {
 			simulationStatus = SimulationStatus.SIMULATION_FINISHED;
@@ -44,16 +44,16 @@ public class StockExchange {
 		return companiesNames;
 	}
 	
-	public List<SharePrice> getSharesPrices() {
-		return sharePrices;
+	public List<Stock> getStocks() {
+		return stocks;
 	}
 	
 	public SimulationStatus getSimulationStatus() {
 		return simulationStatus;
 	}
 	
-	public SharePrice getShareByCompanyName(String companyName) {
-		return sharePrices.stream().filter(sp -> sp.getCompanyName().equals(companyName)).findFirst().get();
+	public Stock getStockByCompanyName(String companyName) {
+		return stocks.stream().filter(s -> s.getCompanyName().equals(companyName)).findFirst().get();
 	}
 	
 	public void nextDay() {
@@ -66,9 +66,9 @@ public class StockExchange {
 					break;
 				}
 
-				sharePrices = dataProvider.getSharePricesByDate(currentDate);
+				stocks = dataProvider.getStocksByDate(currentDate);
 				
-			} while (sharePrices == null || sharePrices.isEmpty() );
+			} while (stocks == null || stocks.isEmpty() );
 		}
 	}
 }

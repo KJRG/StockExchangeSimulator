@@ -10,11 +10,11 @@ public class Wallet {
 	private static final BigDecimal MONEY_IN_THE_BEGINNING = new BigDecimal("10000.0");
 
 	private BigDecimal money;
-	private Map<SharePrice, Integer> sharesQuantities;
+	private Map<Stock, Integer> stocksQuantities;
 
 	public Wallet() {
 		this.money = MONEY_IN_THE_BEGINNING;
-		this.sharesQuantities = new HashMap<SharePrice, Integer>();
+		this.stocksQuantities = new HashMap<Stock, Integer>();
 	}
 
 	public BigDecimal getMoney() {
@@ -25,12 +25,12 @@ public class Wallet {
 		this.money = money;
 	}
 
-	public Map<SharePrice, Integer> getSharesQuantities() {
-		return sharesQuantities;
+	public Map<Stock, Integer> getStocksQuantities() {
+		return stocksQuantities;
 	}
 
-	public void setSharesQuantities(Map<SharePrice, Integer> sharesQuantities) {
-		this.sharesQuantities = sharesQuantities;
+	public void setStocksQuantities(Map<Stock, Integer> stocksQuantities) {
+		this.stocksQuantities = stocksQuantities;
 	}
 	
 	public void addMoney(BigDecimal money) {
@@ -38,46 +38,50 @@ public class Wallet {
 	}
 	
 	public BigDecimal takeMoney(BigDecimal money) {
+		if(this.money.compareTo(money) < 0) {
+			return BigDecimal.ZERO;
+		}
+		
 		this.money = this.money.subtract(money);
 		return money;
 	}
 	
-	public void addShares(Map<SharePrice, Integer> shares) {
-			for(SharePrice sp : shares.keySet()) {
+	public void addStocks(Map<Stock, Integer> stocks) {
+			for(Stock stock : stocks.keySet()) {
 			
-			Integer quantityBeforeAdding = sharesQuantities.get(sp);
+			Integer quantityBeforeAdding = stocksQuantities.get(stock);
 			if(quantityBeforeAdding == null) {
 				quantityBeforeAdding = 0;
 			}
 
-			Integer addedShareQuantity = shares.get(sp);
-			sharesQuantities.put(sp, quantityBeforeAdding + addedShareQuantity);
+			Integer addedStockQuantity = stocks.get(stock);
+			stocksQuantities.put(stock, quantityBeforeAdding + addedStockQuantity);
 		}
 	}
 	
-	public void removeShares(Map<SharePrice, Integer> shares) {
-		for(SharePrice sp : shares.keySet()) {
+	public void removeStocks(Map<Stock, Integer> stocks) {
+		for(Stock stock : stocks.keySet()) {
 			
-			Integer quantityBeforeRemoving = sharesQuantities.get(sp);
+			Integer quantityBeforeRemoving = stocksQuantities.get(stock);
 			if(quantityBeforeRemoving == null) {
 				return;
 			}
 			
-			Integer removedShareQuantity = shares.get(sp);
-			sharesQuantities.put(sp, quantityBeforeRemoving - removedShareQuantity);
+			Integer removedStockQuantity = stocks.get(stock);
+			stocksQuantities.put(stock, quantityBeforeRemoving - removedStockQuantity);
 		}
 	}
 	
-	public void updateSharePrices(List<SharePrice> currentSharePrices) {
+	public void updateStocks(List<Stock> currentStocks) {
 		
-		for (SharePrice sharePrice : sharesQuantities.keySet()) {
+		for (Stock stock : stocksQuantities.keySet()) {
 			
-			BigDecimal price = currentSharePrices.stream()
-					.filter(sp -> sp.getCompanyName()
-							.equals(sharePrice.getCompanyName()))
+			BigDecimal price = currentStocks.stream()
+					.filter(s -> s.getCompanyName()
+							.equals(stock.getCompanyName()))
 					.findFirst().get().getPrice();
 			
-			sharePrice.setPrice(price);
+			stock.setPrice(price);
 		}
 	}
 
@@ -85,9 +89,9 @@ public class Wallet {
 
 		BigDecimal totalValue = money;
 
-		for (SharePrice sharePrice : sharesQuantities.keySet()) {
-			BigDecimal price = sharePrice.getPrice();
-			Integer quantity = sharesQuantities.get(sharePrice);
+		for (Stock stock : stocksQuantities.keySet()) {
+			BigDecimal price = stock.getPrice();
+			Integer quantity = stocksQuantities.get(stock);
 			totalValue = totalValue.add(price.multiply(new BigDecimal(quantity)));
 		}
 

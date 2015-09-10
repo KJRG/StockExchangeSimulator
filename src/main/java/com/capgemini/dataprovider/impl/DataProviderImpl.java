@@ -16,21 +16,21 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.capgemini.dataprovider.DataProvider;
-import com.capgemini.model.SharePrice;
+import com.capgemini.model.Stock;
 
 public class DataProviderImpl implements DataProvider {
 
-	private List<SharePrice> sharePrices;
-	private Comparator<SharePrice> sharePriceDateComparator;
+	private List<Stock> stocks;
+	private Comparator<Stock> stockDateComparator;
 
 	public DataProviderImpl() {
-		sharePrices = new ArrayList<>();
+		stocks = new ArrayList<>();
 
-		sharePriceDateComparator = new Comparator<SharePrice>() {
+		stockDateComparator = new Comparator<Stock>() {
 
 			@Override
-			public int compare(SharePrice o1, SharePrice o2) {
-				return o1.getDate().compareTo(o2.getDate());
+			public int compare(Stock s1, Stock s2) {
+				return s1.getDate().compareTo(s2.getDate());
 			}
 		};
 	}
@@ -51,19 +51,19 @@ public class DataProviderImpl implements DataProvider {
 			reader = new BufferedReader(new FileReader(filepath));
 
 			while ((line = reader.readLine()) != null) {
-				String[] shareData = line.split(separator);
+				String[] stockData = line.split(separator);
 
-				companyName = shareData[0];
+				companyName = stockData[0];
 
 				try {
-					date = LocalDate.parse(shareData[1], dateFormat);
+					date = LocalDate.parse(stockData[1], dateFormat);
 				} catch (DateTimeParseException e) {
 					throw e;
 				}
 
-				price = new BigDecimal(shareData[2]);
+				price = new BigDecimal(stockData[2]);
 
-				sharePrices.add(new SharePrice(companyName, date, price));
+				stocks.add(new Stock(companyName, date, price));
 			}
 		} catch (FileNotFoundException e) {
 			throw e;
@@ -80,27 +80,27 @@ public class DataProviderImpl implements DataProvider {
 
 	@Override
 	public Set<String> getCompaniesNames() {
-		return sharePrices.stream().map(SharePrice::getCompanyName)
+		return stocks.stream().map(Stock::getCompanyName)
 				.collect(Collectors.toSet());
 	}
 
 	@Override
 	public LocalDate getEarliestDate() {
-		return Collections.min(sharePrices, sharePriceDateComparator).getDate();
+		return Collections.min(stocks, stockDateComparator).getDate();
 	}
 
 	@Override
 	public LocalDate getLatestDate() {
-		return Collections.max(sharePrices, sharePriceDateComparator).getDate();
+		return Collections.max(stocks, stockDateComparator).getDate();
 	}
 
-	public List<SharePrice> getSharePrices() {
-		return sharePrices;
+	public List<Stock> getStocks() {
+		return stocks;
 	}
 
 	@Override
-	public List<SharePrice> getSharePricesByDate(LocalDate date) {
-		return sharePrices.stream().filter(p -> p.getDate().equals(date))
+	public List<Stock> getStocksByDate(LocalDate date) {
+		return stocks.stream().filter(s -> s.getDate().equals(date))
 				.collect(Collectors.toList());
 	}
 }

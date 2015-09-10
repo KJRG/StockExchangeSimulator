@@ -8,15 +8,15 @@ import com.capgemini.model.BrokersOffice;
 import com.capgemini.model.Player;
 import com.capgemini.model.SimulationStatus;
 import com.capgemini.model.StockExchange;
-import com.capgemini.model.strategy.impl.RandomPlayingStrategy;
+import com.capgemini.model.strategy.impl.RandomInvestingStrategy;
 
-public class App {
+public class Simulator {
 	public static void main(String[] args) {
 		
 		String filepath = "C:\\Users\\kgalka\\Desktop\\ZadanieGielda\\ZadanieGielda\\dane.csv";
 		StockExchange stockExchange = new StockExchange();
 		BrokersOffice brokersOffice = new BrokersOffice(stockExchange);
-		Player player = new Player(new RandomPlayingStrategy(), brokersOffice);
+		Player player = new Player(new RandomInvestingStrategy(), brokersOffice);
 		
 		try {
 			stockExchange.initialise(filepath);

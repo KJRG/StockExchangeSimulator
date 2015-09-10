@@ -37,13 +37,13 @@ public class BrokersOfficeTest {
 	}
 
 	@Test
-	public void feeShouldBe0point5Percent() {
+	public void brokerageFeeShouldBe0point5Percent() {
 		// given when
 		// 100% - 0.5% = 99.5%
 		// 1 * 99.5% = 0.995
 		BigDecimal expectedResult = new BigDecimal("0.995");
 		// then
-		assertEquals(expectedResult, brokersOffice.getBrokerage());
+		assertEquals(expectedResult, brokersOffice.getBrokerageFee());
 	}
 
 	@Test
@@ -69,28 +69,28 @@ public class BrokersOfficeTest {
 	}
 
 	@Test
-	public void brokersOfficeShouldCallGetSharesPricesFromClassStockExchange() {
+	public void brokersOfficeShouldCallGetStocksPricesFromClassStockExchange() {
 		// given
-		Mockito.when(stockExchange.getSharesPrices())
-				.then(new Answer<List<SharePrice>>() {
+		Mockito.when(stockExchange.getStocks())
+				.then(new Answer<List<Stock>>() {
 
 					@Override
-					public List<SharePrice> answer(InvocationOnMock invocation)
+					public List<Stock> answer(InvocationOnMock invocation)
 							throws Throwable {
 
-						return Arrays.asList(new SharePrice("TPSA",
+						return Arrays.asList(new Stock("TPSA",
 								LocalDate.parse("2013-07-04"),
 								new BigDecimal("7.74")),
-								new SharePrice("PKOBP",
+								new Stock("PKOBP",
 										LocalDate.parse("2013-07-04"),
 										new BigDecimal("34.88")),
-								new SharePrice("PGNIG",
+								new Stock("PGNIG",
 										LocalDate.parse("2013-07-04"),
 										new BigDecimal("6.11")),
-								new SharePrice("KGHM",
+								new Stock("KGHM",
 										LocalDate.parse("2013-07-04"),
 										new BigDecimal("130.0")),
-								new SharePrice("JSW",
+								new Stock("JSW",
 										LocalDate.parse("2013-07-04"),
 										new BigDecimal("66.32")));
 					}
@@ -98,23 +98,23 @@ public class BrokersOfficeTest {
 				});
 
 		// when
-		brokersOffice.getSharesPrices();
+		brokersOffice.getStocks();
 
 		// then
-		Mockito.verify(stockExchange).getSharesPrices();
+		Mockito.verify(stockExchange).getStocks();
 	}
 
 	@Test
-	public void brokersOfficeShouldCallGetShareByCompanyNameFromClassStockExchange() {
+	public void brokersOfficeShouldCallGetStockByCompanyNameFromClassStockExchange() {
 		// given
-		Mockito.when(stockExchange.getShareByCompanyName(Mockito.anyString()))
-				.then(new Answer<SharePrice>() {
+		Mockito.when(stockExchange.getStockByCompanyName(Mockito.anyString()))
+				.then(new Answer<Stock>() {
 
 					@Override
-					public SharePrice answer(InvocationOnMock invocation)
+					public Stock answer(InvocationOnMock invocation)
 							throws Throwable {
 						Object[] args = invocation.getArguments();
-						return new SharePrice((String) args[0],
+						return new Stock((String) args[0],
 								LocalDate.parse("2015-01-02"),
 								new BigDecimal("17.0"));
 					}
@@ -123,22 +123,22 @@ public class BrokersOfficeTest {
 		String companyName = "PKOBP";
 
 		// when
-		SharePrice result = brokersOffice.getShareByCompanyName(companyName);
+		Stock result = brokersOffice.getStockByCompanyName(companyName);
 
 		// then
 		ArgumentCaptor<String> capture = ArgumentCaptor.forClass(String.class);
-		Mockito.verify(stockExchange).getShareByCompanyName(capture.capture());
+		Mockito.verify(stockExchange).getStockByCompanyName(capture.capture());
 		assertEquals(companyName, result.getCompanyName());
 		assertEquals(LocalDate.parse("2015-01-02"), result.getDate());
 		assertEquals(new BigDecimal("17.0").compareTo(result.getPrice()), 0);
 	}
 
 	@Test
-	public void buyShouldReturnEmptyMapForNullShareQuantities() {
+	public void buyShouldReturnEmptyMapForNullStockQuantities() {
 		// given
 		Wallet wallet = new Wallet();
 		// when
-		Map<SharePrice, Integer> result = brokersOffice.buy(null, wallet);
+		Map<Stock, Integer> result = brokersOffice.buy(null, wallet);
 		// then
 		assertNotNull(result);
 		assertTrue(result.isEmpty());
@@ -147,22 +147,22 @@ public class BrokersOfficeTest {
 	@Test
 	public void buyShouldReturnEmptyMapForNullWallet() {
 		// given
-		Map<String, Integer> sharesToBuy = new HashMap<>();
-		sharesToBuy.put("KGHM", 17);
+		Map<String, Integer> stocksToBuy = new HashMap<>();
+		stocksToBuy.put("KGHM", 17);
 		// when
-		Map<SharePrice, Integer> result = brokersOffice.buy(sharesToBuy, null);
+		Map<Stock, Integer> result = brokersOffice.buy(stocksToBuy, null);
 		// then
 		assertNotNull(result);
 		assertTrue(result.isEmpty());
 	}
 
 	@Test
-	public void buyShouldReturnEmptyMapForEmptyShareQuantities() {
+	public void buyShouldReturnEmptyMapForEmptyStockQuantities() {
 		// given
-		Map<String, Integer> sharesToBuy = Collections.emptyMap();
+		Map<String, Integer> stocksToBuy = Collections.emptyMap();
 		Wallet wallet = new Wallet();
 		// when
-		Map<SharePrice, Integer> result = brokersOffice.buy(sharesToBuy,
+		Map<Stock, Integer> result = brokersOffice.buy(stocksToBuy,
 				wallet);
 		// then
 		assertNotNull(result);
@@ -170,25 +170,25 @@ public class BrokersOfficeTest {
 	}
 
 	@Test
-	public void buyShouldReturnBoughtShares() {
+	public void buyShouldReturnBoughtStocks() {
 		// given
-		Map<String, Integer> sharesToBuy = new HashMap<>();
+		Map<String, Integer> stocksToBuy = new HashMap<>();
 		Wallet wallet = new Wallet();
 
-		sharesToBuy.put("KGHM", 1);
-		sharesToBuy.put("TPSA", 7);
-		sharesToBuy.put("JSW", 2);
-		sharesToBuy.put("PKOBP", 8);
-		sharesToBuy.put("PGNIG", 12);
+		stocksToBuy.put("KGHM", 1);
+		stocksToBuy.put("TPSA", 7);
+		stocksToBuy.put("JSW", 2);
+		stocksToBuy.put("PKOBP", 8);
+		stocksToBuy.put("PGNIG", 12);
 		
-		Mockito.when(stockExchange.getShareByCompanyName(Mockito.anyString()))
-		.then(new Answer<SharePrice>() {
+		Mockito.when(stockExchange.getStockByCompanyName(Mockito.anyString()))
+		.then(new Answer<Stock>() {
 			
 			@Override
-			public SharePrice answer(InvocationOnMock invocation)
+			public Stock answer(InvocationOnMock invocation)
 					throws Throwable {
 				Object[] args = invocation.getArguments();
-				return new SharePrice((String) args[0],
+				return new Stock((String) args[0],
 						LocalDate.parse("2015-01-02"),
 						new BigDecimal("17.0"));
 			}
@@ -196,15 +196,15 @@ public class BrokersOfficeTest {
 		});
 		
 		// when
-		Map<SharePrice, Integer> result = brokersOffice.buy(sharesToBuy,
+		Map<Stock, Integer> result = brokersOffice.buy(stocksToBuy,
 				wallet);
 		
 		// then
 		assertNotNull(result);
 		assertFalse(result.isEmpty());
 		assertEquals(result.size(), 5);
-		Integer numberOfBoughtShares = result.values().stream().reduce(0, (a, b) -> a + b);
-		assertEquals((int) numberOfBoughtShares, 30);
+		Integer numberOfBoughtStocks = result.values().stream().reduce(0, (a, b) -> a + b);
+		assertEquals((int) numberOfBoughtStocks, 30);
 	}
 
 	@Test
@@ -221,25 +221,25 @@ public class BrokersOfficeTest {
 	public void sellShouldReturn0ForEmptyMap() {
 		// given
 		BigDecimal result = null;
-		Map<SharePrice, Integer> sharesToSell = Collections.emptyMap();
+		Map<Stock, Integer> stocksToSell = Collections.emptyMap();
 		// when
-		result = brokersOffice.sell(sharesToSell);
+		result = brokersOffice.sell(stocksToSell);
 		// then
 		assertEquals(BigDecimal.ZERO.compareTo(result), 0);
 	}
 
 	@Test
-	public void sellShouldReturn253MinusFee() {
+	public void sellShouldReturn253MinusBrokerageFee() {
 		// given
 		BigDecimal result = null;
-		Map<SharePrice, Integer> sharesToSell = new HashMap<>();
-		sharesToSell.put(new SharePrice("KGHM", LocalDate.parse("2013-07-03"),
+		Map<Stock, Integer> stocksToSell = new HashMap<>();
+		stocksToSell.put(new Stock("KGHM", LocalDate.parse("2013-07-03"),
 				new BigDecimal("126.5")), 2);
 		// when
-		result = brokersOffice.sell(sharesToSell);
+		result = brokersOffice.sell(stocksToSell);
 		// then
 		BigDecimal expectedResult = new BigDecimal("253.0")
-				.multiply(brokersOffice.getBrokerage());
+				.multiply(brokersOffice.getBrokerageFee());
 		assertEquals(expectedResult.compareTo(result), 0);
 	}
 }

@@ -7,7 +7,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Set;
 
-import com.capgemini.model.SharePrice;
+import com.capgemini.model.Stock;
 
 public interface DataProvider {
 
@@ -16,6 +16,6 @@ public interface DataProvider {
 	Set<String> getCompaniesNames();
 	LocalDate getEarliestDate();
 	LocalDate getLatestDate();
-	List<SharePrice> getSharePrices();
-	List<SharePrice> getSharePricesByDate(LocalDate date);
+	List<Stock> getStocks();
+	List<Stock> getStocksByDate(LocalDate date);
 }

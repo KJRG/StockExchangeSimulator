@@ -9,12 +9,12 @@ import java.util.Set;
 
 public class BrokersOffice {
 
-	private static final BigDecimal SUM_AFTER_CHARGING_BROKERAGE = new BigDecimal(
+	private static final BigDecimal MONEY_AFTER_CHARGING_BROKERAGE_FEE = new BigDecimal(
 			"0.995");
 	private StockExchange stockExchange;
 	
-	public BigDecimal getBrokerage() {
-		return SUM_AFTER_CHARGING_BROKERAGE;
+	public BigDecimal getBrokerageFee() {
+		return MONEY_AFTER_CHARGING_BROKERAGE_FEE;
 	}
 
 	public BrokersOffice(StockExchange stockExchange) {
@@ -25,33 +25,33 @@ public class BrokersOffice {
 		return stockExchange.getCompaniesNames();
 	}
 
-	public List<SharePrice> getSharesPrices() {
-		return stockExchange.getSharesPrices();
+	public List<Stock> getStocks() {
+		return stockExchange.getStocks();
 	}
 
-	public SharePrice getShareByCompanyName(String companyName) {
-		return stockExchange.getShareByCompanyName(companyName);
+	public Stock getStockByCompanyName(String companyName) {
+		return stockExchange.getStockByCompanyName(companyName);
 	}
 
-	public Map<SharePrice, Integer> buy(Map<String, Integer> shareQuantities,
+	public Map<Stock, Integer> buy(Map<String, Integer> stocksQuantities,
 			Wallet wallet) {
 
-		if (shareQuantities == null || shareQuantities.isEmpty()
+		if (stocksQuantities == null || stocksQuantities.isEmpty()
 				|| wallet == null) {
 			return Collections.emptyMap();
 		}
 
-		Map<SharePrice, Integer> boughtShares = new HashMap<>();
+		Map<Stock, Integer> boughtStocks = new HashMap<>();
 		BigDecimal totalPrice = BigDecimal.ZERO;
 
-		for (String companyName : shareQuantities.keySet()) {
-			SharePrice boughtShare = stockExchange
-					.getShareByCompanyName(companyName);
-			Integer quantity = shareQuantities.get(companyName);
+		for (String companyName : stocksQuantities.keySet()) {
+			Stock boughtStock = stockExchange
+					.getStockByCompanyName(companyName);
+			Integer quantity = stocksQuantities.get(companyName);
 
-			boughtShares.put(boughtShare, quantity);
+			boughtStocks.put(boughtStock, quantity);
 
-			totalPrice = totalPrice.add(boughtShare.getPrice().multiply(new BigDecimal(quantity)));
+			totalPrice = totalPrice.add(boughtStock.getPrice().multiply(new BigDecimal(quantity)));
 		}
 
 		if (totalPrice.compareTo(wallet.getMoney()) > 0) {
@@ -59,24 +59,24 @@ public class BrokersOffice {
 		}
 		wallet.takeMoney(totalPrice);
 
-		return boughtShares;
+		return boughtStocks;
 	}
 
-	public BigDecimal sell(Map<SharePrice, Integer> sharesQuantities) {
+	public BigDecimal sell(Map<Stock, Integer> stocksQuantities) {
 		
-		BigDecimal sum = BigDecimal.ZERO;
+		BigDecimal totalPrice = BigDecimal.ZERO;
 
-		if (sharesQuantities == null) {
-			return sum;
+		if (stocksQuantities == null) {
+			return totalPrice;
 		}
 
-		for (SharePrice share : sharesQuantities.keySet()) {
-			sum = sum.add(share.getPrice().multiply(new BigDecimal(sharesQuantities.get(share))));
+		for (Stock stock : stocksQuantities.keySet()) {
+			totalPrice = totalPrice.add(stock.getPrice().multiply(new BigDecimal(stocksQuantities.get(stock))));
 		}
 
 		/*
-		 * The broker's office charges brokerage.
+		 * The broker's office charges brokerage fee.
 		 */
-		return sum.multiply(SUM_AFTER_CHARGING_BROKERAGE);
+		return totalPrice.multiply(MONEY_AFTER_CHARGING_BROKERAGE_FEE);
 	}
 }
