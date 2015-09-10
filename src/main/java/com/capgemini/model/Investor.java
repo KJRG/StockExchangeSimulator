@@ -25,6 +25,14 @@ public class Investor {
 	public void setWallet(Wallet wallet) {
 		this.wallet = wallet;
 	}
+	
+	public BrokerageFirm getBrokerageFirm() {
+		return brokerageFirm;
+	}
+	
+	public void setBrokerageFirm(BrokerageFirm brokerageFirm) {
+		this.brokerageFirm = brokerageFirm;
+	}
 
 	public InvestingStrategy getInvestingStrategy() {
 		return investingStrategy;
