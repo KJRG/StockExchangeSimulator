@@ -1,20 +1,23 @@
 package com.capgemini.model;
 
 import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 
-public class Wallet {
+public class Wallet implements Observer {
 
 	private static final BigDecimal MONEY_IN_THE_BEGINNING = new BigDecimal("10000.0");
 
 	private BigDecimal money;
 	private Map<Stock, Integer> stocksQuantities;
 
-	public Wallet() {
+	public Wallet(StockExchange stockExchange) {
 		this.money = MONEY_IN_THE_BEGINNING;
 		this.stocksQuantities = new HashMap<Stock, Integer>();
+		stockExchange.addObserver(this);
 	}
 
 	public BigDecimal getMoney() {
@@ -116,5 +119,15 @@ public class Wallet {
 		}
 
 		return totalValue;
+	}
+
+	@Override
+	public void update(Observable o, Object arg) {
+		if(o == null || o.getClass() != StockExchange.class) {
+			return;
+		}
+		
+		List<Stock> updatedStocks = (List<Stock>) arg;
+		updateStocks(updatedStocks);
 	}
 }

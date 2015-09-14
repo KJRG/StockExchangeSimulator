@@ -10,14 +10,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 public class WalletTest {
+	
+	@InjectMocks
+	private Wallet wallet;
+	@Mock
+	private StockExchange stockExchange;
+	
+	@Before
+	public void setUp() {
+		MockitoAnnotations.initMocks(this);
+	}
 
 	@Test
 	public void walletShouldContain10000PLN() {
 		// given when
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		// then
 		assertEquals(new BigDecimal("10000.0"), wallet.getMoney());
 	}
@@ -25,7 +39,7 @@ public class WalletTest {
 	@Test
 	public void walletShouldContainNoStocks() {
 		// given when
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		// then
 		assertNotNull(wallet.getStocksQuantities());
 		assertEquals(0, wallet.getStocksQuantities().keySet().size());
@@ -34,7 +48,7 @@ public class WalletTest {
 	@Test
 	public void walletsTotalValueShouldBe10000() {
 		// given when
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		// then
 		assertEquals(new BigDecimal("10000.0"), wallet.getTotalValue());
 	}
@@ -42,7 +56,7 @@ public class WalletTest {
 	@Test
 	public void walletShouldNotAddMoneyForNullMoneyArgument() {
 		// given
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		// when
 		wallet.addMoney(null);
 		// then
@@ -52,7 +66,7 @@ public class WalletTest {
 	@Test
 	public void walletShouldAddMoney() {
 		// given
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		// when
 		wallet.addMoney(new BigDecimal("1000.0"));
 		// then
@@ -62,7 +76,7 @@ public class WalletTest {
 	@Test
 	public void walletShouldNotSubtractMoneyForNullMoneyArgument() {
 		// given
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		// when
 		wallet.takeMoney(null);
 		// then
@@ -72,7 +86,7 @@ public class WalletTest {
 	@Test
 	public void walletShouldSubtractMoney() {
 		// given
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		// when
 		wallet.takeMoney(new BigDecimal("1000.0"));
 		// then
@@ -82,7 +96,7 @@ public class WalletTest {
 	@Test
 	public void walletShouldNotSubtractMoney() {
 		// given
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		// when
 		wallet.takeMoney(new BigDecimal("11000.0"));
 		// then
@@ -92,7 +106,7 @@ public class WalletTest {
 	@Test
 	public void walletShouldNotAddStocksForNullStocksArgument() {
 		// given
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		// when
 		wallet.addStocks(null);
 		// then
@@ -104,7 +118,7 @@ public class WalletTest {
 	@Test
 	public void walletShouldNotAddStocksForEmptyStocksArgument() {
 		// given
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		Map<Stock, Integer> stocks = Collections.emptyMap();
 		// when
 		wallet.addStocks(stocks);
@@ -117,7 +131,7 @@ public class WalletTest {
 	@Test
 	public void walletShouldAddStocks() {
 		// given
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		Map<Stock, Integer> stocks = new HashMap<>();
 		stocks.put(new Stock("PKOBP", LocalDate.parse("2013-01-07"),
 				new BigDecimal("36.13")), 5);
@@ -134,7 +148,7 @@ public class WalletTest {
 	@Test
 	public void walletShouldNotRemoveStocksForNullStocksArgument() {
 		// given
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		Map<Stock, Integer> stocks = new HashMap<>();
 		stocks.put(new Stock("PKOBP", LocalDate.parse("2013-01-07"),
 				new BigDecimal("36.13")), 5);
@@ -152,7 +166,7 @@ public class WalletTest {
 	@Test
 	public void walletShouldNotRemoveStocksForEmptyStocksArgument() {
 		// given
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		Map<Stock, Integer> stocks = new HashMap<>();
 		stocks.put(new Stock("PKOBP", LocalDate.parse("2013-01-07"),
 				new BigDecimal("36.13")), 5);
@@ -174,7 +188,7 @@ public class WalletTest {
 	@Test
 	public void walletShouldRemoveStocks() {
 		// given
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		Map<Stock, Integer> stocks = new HashMap<>();
 		stocks.put(new Stock("PKOBP", LocalDate.parse("2013-01-07"),
 				new BigDecimal("36.13")), 5);
@@ -203,7 +217,7 @@ public class WalletTest {
 	@Test
 	public void walletShouldRemoveAllStocks() {
 		// given
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		Map<Stock, Integer> stocks = new HashMap<>();
 		stocks.put(new Stock("KGHM", LocalDate.parse("2013-01-07"),
 				new BigDecimal("193.0")), 5);
@@ -230,7 +244,7 @@ public class WalletTest {
 	@Test
 	public void walletShouldNotUpdateStocksForNullCurrentStocksArgument() {
 		// given
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		Map<Stock, Integer> stocksQuantities = new HashMap<>();
 		stocksQuantities.put(
 				new Stock("TPSA", LocalDate.parse("2013-01-02"),
@@ -252,7 +266,7 @@ public class WalletTest {
 	@Test
 	public void walletShouldNotUpdateStocksForEmptyCurrentStocksArgument() {
 		// given
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		Map<Stock, Integer> stocksQuantities = new HashMap<>();
 		stocksQuantities.put(
 				new Stock("TPSA", LocalDate.parse("2013-01-02"),
@@ -276,7 +290,7 @@ public class WalletTest {
 	@Test
 	public void walletShouldUpdateStocks() {
 		// given
-		Wallet wallet = new Wallet();
+		Wallet wallet = new Wallet(stockExchange);
 		Map<Stock, Integer> stocksQuantities = new HashMap<>();
 
 		stocksQuantities.put(

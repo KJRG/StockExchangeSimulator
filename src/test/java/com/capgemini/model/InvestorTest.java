@@ -20,6 +20,8 @@ public class InvestorTest {
 	private InvestingStrategy investingStrategy;
 	@Mock
 	private BrokerageFirm brokerageFirm;
+	@Mock
+	private StockExchange stockExchange;
 
 	@Before
 	public void setUp() {

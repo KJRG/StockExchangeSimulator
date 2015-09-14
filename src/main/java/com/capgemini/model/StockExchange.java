@@ -5,12 +5,13 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Observable;
 import java.util.Set;
 
 import com.capgemini.dataprovider.DataProvider;
 import com.capgemini.dataprovider.impl.DataProviderImpl;
 
-public class StockExchange {
+public class StockExchange extends Observable {
 
 	private SimulationStatus simulationStatus;
 	private DataProvider dataProvider;
@@ -25,7 +26,7 @@ public class StockExchange {
 		currentDate = null;
 		companiesNames = null;
 	}
-
+	
 	public void initialise(String filepath)
 			throws FileNotFoundException, IOException, DateTimeParseException {
 		dataProvider.readDataFromFile(filepath);
@@ -67,6 +68,8 @@ public class StockExchange {
 				}
 
 				stocks = dataProvider.getStocksByDate(currentDate);
+				setChanged();
+				notifyObservers(getStocks());
 				
 			} while (stocks == null || stocks.isEmpty() );
 		}

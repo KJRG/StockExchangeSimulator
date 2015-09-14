@@ -12,8 +12,8 @@ public class Investor {
 	private BrokerageFirm brokerageFirm;
 
 	public Investor(InvestingStrategy investingStrategy,
-			BrokerageFirm brokerageFirm) {
-		this.wallet = new Wallet();
+			BrokerageFirm brokerageFirm, StockExchange stockExchange) {
+		this.wallet = new Wallet(stockExchange);
 		this.investingStrategy = investingStrategy;
 		this.brokerageFirm = brokerageFirm;
 	}
@@ -62,6 +62,6 @@ public class Investor {
 	public void invest() {
 		buyStocks();
 		sellStocks();
-		wallet.updateStocks(brokerageFirm.getStocks());
+//		wallet.updateStocks(brokerageFirm.getStocks());
 	}
 }
