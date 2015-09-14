@@ -62,6 +62,5 @@ public class Investor {
 	public void invest() {
 		buyStocks();
 		sellStocks();
-//		wallet.updateStocks(brokerageFirm.getStocks());
 	}
 }

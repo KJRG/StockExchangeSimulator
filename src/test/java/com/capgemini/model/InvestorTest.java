@@ -43,9 +43,6 @@ public class InvestorTest {
 		Mockito.verify(wallet).removeStocks(Mockito.any());
 		Mockito.verify(brokerageFirm).sell(Mockito.any());
 		Mockito.verify(wallet).addMoney(Mockito.any());
-		
-		Mockito.verify(brokerageFirm).getStocks();
-		Mockito.verify(wallet).updateStocks(Mockito.any());
 	}
 
 }

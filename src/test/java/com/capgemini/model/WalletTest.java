@@ -326,6 +326,7 @@ public class WalletTest {
 				.multiply(new BigDecimal("7.74"));
 		expectedResult = expectedResult
 				.add(new BigDecimal("7.0").multiply(new BigDecimal("34.88")));
+		
 		assertEquals(0, expectedResult.compareTo(wallet.getTotalValue()));
 	}
 
