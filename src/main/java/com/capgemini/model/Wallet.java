@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -137,8 +138,17 @@ public class Wallet implements Observer {
 		if (o == null || o.getClass() != StockExchange.class) {
 			return;
 		}
+		
+		List<Stock> currentStocks = new ArrayList<>();
+		if(arg instanceof List) {
+			for(int i = 0; i < ((List<?>) arg).size(); i++) {
+				Object item = ((List<?>) arg).get(i);
+				if(item instanceof Stock) {
+					currentStocks.add((Stock) item);
+				}
+			}
+		}
 
-		List<Stock> updatedStocks = (List<Stock>) arg;
-		updateStocks(updatedStocks);
+		updateStocks(currentStocks);
 	}
 }
